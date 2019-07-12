@@ -34,7 +34,6 @@ with it:
 - a **server** which provides an HTTP/JSON API for Supply Chain actions
 - a **ledger sync** which syncs blockchain data to a local database
 - the **AssetTrack** example client for tracking generic assets
-- the **FishNet** example client for tracking fish from catch to table
 - a **shell** container with the dependencies to run any commands and scripts
 
 
@@ -61,7 +60,6 @@ available through HTTP endpoints, including:
 
 - The Supply Chain REST API will be at **http://localhost:8020**
 - AssetTrack will be at **http://localhost:8021**
-- FishNet will be at **http://localhost:8022**
 - RethinkDB's admin panel will be available at **http://localhost:8023**
 - Sawtooth's blockchain REST API will be available at **http://localhost:8024**
 
@@ -97,7 +95,6 @@ Then run one of the two provided npm scripts:
 
 ```bash
 npm run update-sample-assets
-npm run update-sample-fish
 ```
 
 You can customize how many updates are submitted per minute with the `RATE`
@@ -151,7 +148,6 @@ The available container names include:
 - supply-processor
 - supply-server
 - supply-asset-client
-- supply-fish-client
 - supply-rethink
 - supply-validator
 - supply-settings-tp
@@ -174,11 +170,6 @@ client's directory and running its build script:
 
 ```bash
 cd asset_client/
-npm run build
-```
-
-```bash
-cd fish_client/
 npm run build
 ```
 
