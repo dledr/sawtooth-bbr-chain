@@ -34,12 +34,12 @@ use log4rs::encode::pattern::PatternEncoder;
 
 use sawtooth_sdk::processor::TransactionProcessor;
 
-use handler::SupplyChainTransactionHandler;
+use handler::BbrChainTransactionHandler;
 
 fn main() {
     let matches = clap_app!(intkey =>
         (version: crate_version!())
-        (about: "SupplyChain Transaction Processor (Rust)")
+        (about: "BbrChain Transaction Processor (Rust)")
         (@arg connect: -C --connect +takes_value
          "connection endpoint for validator")
         (@arg verbose: -v --verbose +multiple
@@ -77,7 +77,7 @@ fn main() {
         Err(_) => process::exit(1),
     }
 
-    let handler = SupplyChainTransactionHandler::new();
+    let handler = BbrChainTransactionHandler::new();
     let mut processor = TransactionProcessor::new(endpoint);
 
     info!("Console logging level: {}", console_log_level);

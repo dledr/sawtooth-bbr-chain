@@ -30,7 +30,7 @@ const modals = require('../components/modals')
 const api = require('../services/api')
 
 const STORAGE_KEY = 'asset_track.encryptedKey'
-const FAMILY_NAME = 'supply_chain'
+const FAMILY_NAME = 'bbr_chain'
 const FAMILY_VERSION = '1.1'
 const NAMESPACE = '3400de'
 

@@ -13,11 +13,11 @@
 # limitations under the License.
 
 [package]
-name = "supply-chain-tp"
+name = "bbr-chain-tp"
 version = "0.10.1"
 authors = ["Cargill Incorporated"]
-description = "Sawtooth Supply Chain Transaction Processor"
-homepage = "https://github.com/hyperledger/sawtooth-supply-chain"
+description = "Sawtooth BBR Chain Transaction Processor"
+homepage = "https://github.com/hyperledger/sawtooth-bbr-chain"
 
 [dependencies]
 sawtooth-sdk = "^0.2"

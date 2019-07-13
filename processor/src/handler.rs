@@ -40,13 +40,13 @@ enum Action {
     RevokeReporter(payload::RevokeReporterAction),
 }
 
-struct SupplyChainPayload {
+struct BbrChainPayload {
     action: Action,
     timestamp: u64,
 }
 
-impl SupplyChainPayload {
-    pub fn new(payload: &[u8]) -> Result<Option<SupplyChainPayload>, ApplyError> {
+impl BbrChainPayload {
+    pub fn new(payload: &[u8]) -> Result<Option<BbrChainPayload>, ApplyError> {
         let payload: payload::SCPayload = match protobuf::parse_from_bytes(payload) {
             Ok(payload) => payload,
             Err(_) => {
@@ -56,8 +56,8 @@ impl SupplyChainPayload {
             }
         };
 
-        let supply_chain_action = payload.get_action();
-        let action = match supply_chain_action {
+        let bbr_chain_action = payload.get_action();
+        let action = match bbr_chain_action {
             payload::SCPayload_Action::CREATE_AGENT => {
                 let create_agent = payload.get_create_agent();
                 if create_agent.get_name() == "" {
@@ -124,7 +124,7 @@ impl SupplyChainPayload {
             x => x,
         };
 
-        Ok(Some(SupplyChainPayload {
+        Ok(Some(BbrChainPayload {
             action: action,
             timestamp: timestamp,
         }))
@@ -139,13 +139,13 @@ impl SupplyChainPayload {
     }
 }
 
-pub struct SupplyChainState<'a> {
+pub struct BbrChainState<'a> {
     context: &'a mut TransactionContext,
 }
 
-impl<'a> SupplyChainState<'a> {
-    pub fn new(context: &'a mut TransactionContext) -> SupplyChainState {
-        SupplyChainState { context: context }
+impl<'a> BbrChainState<'a> {
+    pub fn new(context: &'a mut TransactionContext) -> BbrChainState {
+        BbrChainState { context: context }
     }
 
     pub fn get_record(&mut self, record_id: &str) -> Result<Option<record::Record>, ApplyError> {
@@ -576,25 +576,25 @@ impl<'a> SupplyChainState<'a> {
     }
 }
 
-pub struct SupplyChainTransactionHandler {
+pub struct BbrChainTransactionHandler {
     family_name: String,
     family_versions: Vec<String>,
     namespaces: Vec<String>,
 }
 
-impl SupplyChainTransactionHandler {
-    pub fn new() -> SupplyChainTransactionHandler {
-        SupplyChainTransactionHandler {
-            family_name: "supply_chain".to_string(),
+impl BbrChainTransactionHandler {
+    pub fn new() -> BbrChainTransactionHandler {
+        BbrChainTransactionHandler {
+            family_name: "bbr_chain".to_string(),
             family_versions: vec!["1.1".to_string()],
-            namespaces: vec![get_supply_chain_prefix().to_string()],
+            namespaces: vec![get_bbr_chain_prefix().to_string()],
         }
     }
 
     fn _create_agent(
         &self,
         payload: payload::CreateAgentAction,
-        mut state: SupplyChainState,
+        mut state: BbrChainState,
         signer: &str,
         timestamp: u64,
     ) -> Result<(), ApplyError> {
@@ -622,7 +622,7 @@ impl SupplyChainTransactionHandler {
     fn _create_record(
         &self,
         payload: payload::CreateRecordAction,
-        mut state: SupplyChainState,
+        mut state: BbrChainState,
         signer: &str,
         timestamp: u64,
     ) -> Result<(), ApplyError> {
@@ -775,7 +775,7 @@ impl SupplyChainTransactionHandler {
     fn _finalize_record(
         &self,
         payload: payload::FinalizeRecordAction,
-        mut state: SupplyChainState,
+        mut state: BbrChainState,
         signer: &str,
     ) -> Result<(), ApplyError> {
         let record_id = payload.get_record_id();
@@ -828,7 +828,7 @@ impl SupplyChainTransactionHandler {
     fn _create_record_type(
         &self,
         payload: payload::CreateRecordTypeAction,
-        mut state: SupplyChainState,
+        mut state: BbrChainState,
         signer: &str,
     ) -> Result<(), ApplyError> {
         match state.get_agent(signer) {
@@ -868,7 +868,7 @@ impl SupplyChainTransactionHandler {
     fn _update_properties(
         &self,
         payload: payload::UpdatePropertiesAction,
-        mut state: SupplyChainState,
+        mut state: BbrChainState,
         signer: &str,
         timestamp: u64,
     ) -> Result<(), ApplyError> {
@@ -997,7 +997,7 @@ impl SupplyChainTransactionHandler {
     fn _create_proposal(
         &self,
         payload: payload::CreateProposalAction,
-        mut state: SupplyChainState,
+        mut state: BbrChainState,
         signer: &str,
         timestamp: u64,
     ) -> Result<(), ApplyError> {
@@ -1132,7 +1132,7 @@ impl SupplyChainTransactionHandler {
     fn _answer_proposal(
         &self,
         payload: payload::AnswerProposalAction,
-        mut state: SupplyChainState,
+        mut state: BbrChainState,
         signer: &str,
         timestamp: u64,
     ) -> Result<(), ApplyError> {
@@ -1410,7 +1410,7 @@ impl SupplyChainTransactionHandler {
     fn _revoke_reporter(
         &self,
         payload: payload::RevokeReporterAction,
-        mut state: SupplyChainState,
+        mut state: BbrChainState,
         signer: &str,
     ) -> Result<(), ApplyError> {
         let record_id = payload.get_record_id();
@@ -1599,7 +1599,7 @@ impl SupplyChainTransactionHandler {
     }
 }
 
-impl TransactionHandler for SupplyChainTransactionHandler {
+impl TransactionHandler for BbrChainTransactionHandler {
     fn family_name(&self) -> String {
         return self.family_name.clone();
     }
@@ -1617,7 +1617,7 @@ impl TransactionHandler for SupplyChainTransactionHandler {
         request: &TpProcessRequest,
         context: &mut TransactionContext,
     ) -> Result<(), ApplyError> {
-        let payload = SupplyChainPayload::new(request.get_payload());
+        let payload = BbrChainPayload::new(request.get_payload());
         let payload = match payload {
             Err(e) => return Err(e),
             Ok(payload) => payload,
@@ -1632,7 +1632,7 @@ impl TransactionHandler for SupplyChainTransactionHandler {
         };
 
         let signer = request.get_header().get_signer_public_key();
-        let state = SupplyChainState::new(context);
+        let state = BbrChainState::new(context);
 
         info!(
             "payload: {:?} {} {} {}",

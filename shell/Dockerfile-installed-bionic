@@ -51,7 +51,7 @@ RUN echo "deb http://repo.sawtooth.me/ubuntu/nightly bionic universe" >> /etc/ap
   && rm -rf /var/lib/apt/lists/* \
   && npm install -g prebuild-install
 
-WORKDIR /sawtooth-supply-chain
+WORKDIR /sawtooth-bbr-chain
 
 # Install NPM dependencies to central location, link to individual components
 COPY bin/splice_json bin/
@@ -83,6 +83,6 @@ RUN mkdir /node_deps \
   && ln -s /node_deps/node_modules asset_client/ \
   && ln -s /node_deps/node_modules server/
 
-ENV PATH $PATH:/sawtooth-supply-chain/bin
+ENV PATH $PATH:/sawtooth-bbr-chain/bin
 
 CMD ["tail", "-f", "/dev/null"]

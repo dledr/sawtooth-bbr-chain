@@ -19,21 +19,21 @@ version: "2.1"
 services:
 
   shell:
-    image: supply-shell
-    container_name: supply-shell-test
+    image: bbr-shell
+    container_name: bbr-shell-test
     build:
       context: ../../../
       dockerfile: shell/Dockerfile
     volumes:
-      - ../../../:/sawtooth-supply-chain
-      - /sawtooth-supply-chain/server/node_modules
+      - ../../../:/sawtooth-bbr-chain
+      - /sawtooth-bbr-chain/server/node_modules
     depends_on:
       - rethink
       - rest-api
     environment:
       - VALIDATOR_URL=tcp://validator:4004
       - DB_HOST=rethink
-      - SERVER=http://supply-server:3000
+      - SERVER=http://bbr-server:3000
     command: |
       bash -c "
         protogen &&
@@ -46,12 +46,12 @@ services:
         tail -f /dev/null
       "
 
-  supply-chain-tp:
-    image: supply-tp:$ISOLATION_ID
+  bbr-chain-tp:
+    image: bbr-tp:$ISOLATION_ID
     volumes:
-      - ../../../:/sawtooth-supply-chain/
-      - /sawtooth-supply-chain/processor/target
-      - /sawtooth-supply-chain/processor/src/messages
+      - ../../../:/sawtooth-bbr-chain/
+      - /sawtooth-bbr-chain/processor/target
+      - /sawtooth-bbr-chain/processor/src/messages
     expose:
       - 4004
     build:
@@ -60,7 +60,7 @@ services:
     entrypoint: |
       bash -c "
         cargo build &&
-        supply-chain-tp -v -C tcp://validator:4004
+        bbr-chain-tp -v -C tcp://validator:4004
       "
 
   rethink:
@@ -71,7 +71,7 @@ services:
 
   settings-tp:
     image: hyperledger/sawtooth-tp_settings:latest
-    container_name: supply-settings-tp-test
+    container_name: bbr-settings-tp-test
     expose:
       - 4004
     depends_on:
@@ -80,7 +80,7 @@ services:
 
   validator:
     image: hyperledger/sawtooth-validator:latest
-    container_name: supply-validator-test
+    container_name: bbr-validator-test
     expose:
       - 4004
     # start the validator with an empty genesis batch
@@ -100,7 +100,7 @@ services:
 
   rest-api:
     image: hyperledger/sawtooth-rest_api:latest
-    container_name: supply-rest-api-test
+    container_name: bbr-rest-api-test
     expose:
       - 4004
       - 8008
@@ -108,9 +108,9 @@ services:
       - validator
     entrypoint: sawtooth-rest-api --connect tcp://validator:4004 --bind rest-api:8008 -vv
 
-  supply-server:
-    image: supply-server
-    container_name: supply-server-test
+  bbr-server:
+    image: bbr-server
+    container_name: bbr-server-test
     build:
       context: ../../../
       dockerfile: server/Dockerfile
@@ -119,8 +119,8 @@ services:
         - https_proxy
         - no_proxy
     volumes:
-      - ../../../:/sawtooth-supply-chain
-      - /sawtooth-supply-chain/server/node_modules
+      - ../../../:/sawtooth-bbr-chain
+      - /sawtooth-bbr-chain/server/node_modules
     expose:
       - 8080
       - 3000
@@ -133,14 +133,14 @@ services:
     entrypoint: node index.js
 
   ledger-sync:
-    image: supply-ledger-sync
-    container_name: supply-ledger-sync-test
+    image: bbr-ledger-sync
+    container_name: bbr-ledger-sync-test
     build:
       context: ../../../
       dockerfile: ledger_sync/Dockerfile
     volumes:
-      - ../../../:/sawtooth-supply-chain
-      - /sawtooth-supply-chain/ledger_sync/node_modules
+      - ../../../:/sawtooth-bbr-chain
+      - /sawtooth-bbr-chain/ledger_sync/node_modules
     depends_on:
       - validator
       - rethink
@@ -148,30 +148,30 @@ services:
       - VALIDATOR_URL=tcp://validator:4004
       - DB_HOST=rethink
 
-  test-supply-chain-rust:
-    image: supply-chain-dev-python:$ISOLATION_ID
+  test-bbr-chain-rust:
+    image: bbr-chain-dev-python:$ISOLATION_ID
     build:
       context: ../../../
-      dockerfile: docker/supply-chain-dev-python
+      dockerfile: docker/bbr-chain-dev-python
     volumes:
-      - ../../../:/sawtooth-supply-chain
+      - ../../../:/sawtooth-bbr-chain
     expose:
       - 8080
       - 8081
     depends_on:
-      - supply-server
+      - bbr-server
     command: |
       bash -c "
         echo 'Waiting 60s to being testing . . .' &&
         sleep 60 &&
         nose2-3 -vvv \
-          -c /sawtooth-supply-chain/nose2.cfg \
-          -s /sawtooth-supply-chain/integration/sawtooth_integration/tests \
-          test_supply_chain.TestSupplyChain --log-capture
+          -c /sawtooth-bbr-chain/nose2.cfg \
+          -s /sawtooth-bbr-chain/integration/sawtooth_integration/tests \
+          test_bbr_chain.TestBbrChain --log-capture
       "
     stop_signal: SIGKILL
     environment:
       PYTHONPATH:
-        "/sawtooth-supply-chain/processor:\
-        /sawtooth-supply-chain/tests:\
-        /sawtooth-supply-chain/integration"
+        "/sawtooth-bbr-chain/processor:\
+        /sawtooth-bbr-chain/tests:\
+        /sawtooth-bbr-chain/integration"

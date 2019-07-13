@@ -1,7 +1,7 @@
 {
   "name": "asset_track",
   "version": "0.0.0",
-  "description": "A Sawtooth Supply Chain client web app for tracking assets",
+  "description": "A Sawtooth BBR Chain client web app for tracking assets",
   "main": "",
   "scripts": {
     "generate-proto-files": "node scripts/generate_proto_json.js > src/generated_protos.json",
@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hyperledger/sawtooth-supply-chain.git"
+    "url": "git+https://github.com/hyperledger/sawtooth-bbr-chain.git"
   },
   "author": "",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/hyperledger/sawtooth-supply-chain/issues"
+    "url": "https://github.com/hyperledger/sawtooth-bbr-chain/issues"
   },
-  "homepage": "https://github.com/hyperledger/sawtooth-supply-chain#readme",
+  "homepage": "https://github.com/hyperledger/sawtooth-bbr-chain#readme",
   "dependencies": {
     "bootstrap": "^4.0.0-beta",
     "chart.js": "^2.7.0",

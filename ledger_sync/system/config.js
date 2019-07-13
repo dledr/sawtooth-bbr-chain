@@ -38,6 +38,6 @@ initConfigValue('RETRY_WAIT', 5000)
 initConfigValue('VALIDATOR_URL', 'tcp://localhost:4004')
 initConfigValue('DB_HOST', 'localhost')
 initConfigValue('DB_PORT', 28015)
-initConfigValue('DB_NAME', 'supply_chain')
+initConfigValue('DB_NAME', 'bbr_chain')
 
 module.exports = config

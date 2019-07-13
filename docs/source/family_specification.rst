@@ -1,12 +1,12 @@
 ******************************************************
-Sawtooth Supply Chain Transaction Family Specification
+Sawtooth BBR Chain Transaction Family Specification
 ******************************************************
 
 Overview
 ========
 
-The Sawtooth Supply Chain transaction family allows users to track
-goods as they move through a supply chain. Records for goods include a
+The Sawtooth BBR Chain transaction family allows users to track
+goods as they move through a bbr chain. Records for goods include a
 history of ownership and custodianship, as well as histories for a
 variety of properties such as temperature and location. These
 properties are managed through a user-specifiable system of record
@@ -16,19 +16,19 @@ types.
 State
 =====
 
-All Supply Chain objects are serialized using Protocol Buffers before being
+All BBR Chain objects are serialized using Protocol Buffers before being
 stored in state. These objects include: Agents, Properties
 (accompanied by their auxiliary PropertyPage objects), Proposals,
 Records, and RecordTypes. As described in the Addressing_ section
 below, these objects are stored in separate sub-namespaces under the
-Supply Chain namespace. To handle hash collisions, all objects are stored in
+BBR Chain namespace. To handle hash collisions, all objects are stored in
 lists within protobuf "Container" objects.
 
 
 Records
 -------
 
-Records represent the goods being tracked by Supply Chain. Almost
+Records represent the goods being tracked by BBR Chain. Almost
 every transaction references some Record.
 
 A Record contains a unique identifier, the name of a RecordType, and
@@ -392,19 +392,19 @@ then by ``timestamp`` (earliest to latest).
 Addressing
 ----------
 
-Supply Chain objects are stored under the namespace obtained by taking the
+BBR Chain objects are stored under the namespace obtained by taking the
 first six characters of the SHA-512 hash of the string
-``supply_chain``:
+``bbr_chain``:
 
 .. code-block:: pycon
 
    >>> def get_hash(string):
    ...     return hashlib.sha512(string.encode('utf-8')).hexdigest()
    ...
-   >>> get_hash('supply_chain')[:6]
+   >>> get_hash('bbr_chain')[:6]
    '3400de'
 
-After its namespace prefix, the next two characters of a Supply Chain object's
+After its namespace prefix, the next two characters of a BBR Chain object's
 address are a string based on the object's type:
 
 - Agent: ``ae``
@@ -450,7 +450,7 @@ PropertyPage is:
 
 .. code-block:: pycon
 
-    >>> get_hash('supply_chain')[:6] + 'ea'  + get_hash('fish-456')[:36] + get_hash('temperature')[:22] + hex(28)[2:].zfill(4)
+    >>> get_hash('bbr_chain')[:6] + 'ea'  + get_hash('fish-456')[:36] + get_hash('temperature')[:22] + hex(28)[2:].zfill(4)
     '3400deea840d00edc7507ed05cfb86938e3624ada6c7f08bfeb8fd09b963f81f9d001c'
 
 
@@ -460,7 +460,7 @@ Transactions
 Transaction Payload
 -------------------
 
-All Supply Chain transactions are wrapped in a tagged payload object to allow
+All BBR Chain transactions are wrapped in a tagged payload object to allow
 for the transaction to be dispatched to appropriate handling logic.
 
 .. code-block:: protobuf

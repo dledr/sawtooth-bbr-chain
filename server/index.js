@@ -34,7 +34,7 @@ Promise.all([
   .then(() => {
     app.use('/', api)
     app.listen(PORT, () => {
-      console.log(`Supply Chain Server listening on port ${PORT}`)
+      console.log(`BBR Chain Server listening on port ${PORT}`)
     })
   })
   .catch(err => console.error(err.message))

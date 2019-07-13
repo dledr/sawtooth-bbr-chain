@@ -42,7 +42,7 @@ def main(args=None):
     protoc(
         JOIN(TOP_DIR, "protos"),
         "tests",
-        "sawtooth_sc_test/protobuf")
+        "sawtooth_bc_test/protobuf")
 
 
 def protoc(src_dir, base_dir, pkg, language="python"):
