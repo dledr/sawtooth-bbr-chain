@@ -197,3 +197,7 @@ Sawtooth BBR Chain documentation in the [docs](docs)
 subdirectory is licensed under a Creative Commons Attribution 4.0 International
 License.  You may obtain a copy of the license at:
 http://creativecommons.org/licenses/by/4.0/.
+
+## Credits
+
+Original fork: [hyperledger/sawtooth-supply-chain](https://github.com/hyperledger/sawtooth-supply-chain)
