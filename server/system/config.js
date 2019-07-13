@@ -43,7 +43,7 @@ initConfigValue('DEFAULT_SUBMIT_WAIT', 5000000)
 initConfigValue('VALIDATOR_URL', 'tcp://localhost:4004')
 initConfigValue('DB_HOST', 'localhost')
 initConfigValue('DB_PORT', 28015)
-initConfigValue('DB_NAME', 'supply_chain')
+initConfigValue('DB_NAME', 'bbr_chain')
 initConfigValue('SIGNING_ALGORITHM', 'secp256k1')
 
 // Setup config variables with no defaults
@@ -62,7 +62,7 @@ if (!config.PRIVATE_KEY) {
 }
 
 if (!config.JWT_SECRET) {
-  config.JWT_SECRET = 'supply-chain-secret'
+  config.JWT_SECRET = 'bbr-chain-secret'
   console.warn(
     'WARNING! No secret provided. JWT authorization tokens will be insecure!')
   console.warn(

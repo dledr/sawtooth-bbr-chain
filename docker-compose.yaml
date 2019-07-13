@@ -18,8 +18,8 @@ version: '2.1'
 services:
 
   shell:
-    image: supply-shell
-    container_name: supply-shell
+    image: bbr-shell
+    container_name: bbr-shell
     build:
       context: .
       dockerfile: shell/Dockerfile
@@ -28,10 +28,9 @@ services:
         - https_proxy
         - no_proxy
     volumes:
-      - .:/sawtooth-supply-chain
-      - /sawtooth-supply-chain/asset_client/node_modules
-      - /sawtooth-supply-chain/fish_client/node_modules
-      - /sawtooth-supply-chain/server/node_modules
+      - .:/sawtooth-bbr-chain
+      - /sawtooth-bbr-chain/asset_client/node_modules
+      - /sawtooth-bbr-chain/server/node_modules
     depends_on:
       - rethink
       - rest-api
@@ -45,23 +44,20 @@ services:
     command: |
       bash -c "
         cd asset_client/ && npm run build && cd - &&
-        cd fish_client/ && npm run build && cd - &&
         if [ ! -f /root/.sawtooth/keys/root.priv ]; then
           sawtooth keygen &&
           cd server/ &&
           npm run init &&
           npm run make-asset &&
-          npm run make-fish &&
           npm run seed-sample-assets &&
-          npm run seed-sample-fish &&
           cd -
         fi;
         tail -f /dev/null
       "
 
   processor:
-    image: supply-tp
-    container_name: supply-tp
+    image: bbr-tp
+    container_name: bbr-tp
     build:
       context: processor/
       args:
@@ -73,18 +69,18 @@ services:
       - 'https_proxy=${https_proxy}'
       - 'no_proxy=rest-api,server,eth0,validator,${no_proxy}'
     volumes:
-      - .:/sawtooth-supply-chain
-      - /sawtooth-supply-chain/processor/target
-      - /sawtooth-supply-chain/processor/src/messages
+      - .:/sawtooth-bbr-chain
+      - /sawtooth-bbr-chain/processor/target
+      - /sawtooth-bbr-chain/processor/src/messages
     entrypoint: |
       bash -c "
         cargo build &&
-        supply-chain-tp -v -C tcp://validator:4004
+        bbr-chain-tp -v -C tcp://validator:4004
       "
 
   server:
-    image: supply-server
-    container_name: supply-server
+    image: bbr-server
+    container_name: bbr-server
     build:
       context: .
       dockerfile: server/Dockerfile
@@ -93,8 +89,8 @@ services:
         - https_proxy
         - no_proxy
     volumes:
-      - .:/sawtooth-supply-chain
-      - /sawtooth-supply-chain/server/node_modules
+      - .:/sawtooth-bbr-chain
+      - /sawtooth-bbr-chain/server/node_modules
     expose:
       - 3000
     ports:
@@ -112,8 +108,8 @@ services:
     entrypoint: node index.js
 
   ledger-sync:
-    image: supply-ledger-sync
-    container_name: supply-ledger-sync
+    image: bbr-ledger-sync
+    container_name: bbr-ledger-sync
     build:
       context: .
       dockerfile: ledger_sync/Dockerfile
@@ -122,8 +118,8 @@ services:
         - https_proxy
         - no_proxy
     volumes:
-      - .:/sawtooth-supply-chain
-      - /sawtooth-supply-chain/ledger_sync/node_modules
+      - .:/sawtooth-bbr-chain
+      - /sawtooth-bbr-chain/ledger_sync/node_modules
     depends_on:
       - validator
       - rethink
@@ -135,8 +131,8 @@ services:
       - 'no_proxy=rest-api,server,eth0,validator,${no_proxy}'
 
   asset-client:
-    image: supply-asset-client
-    container_name: supply-asset-client
+    image: bbr-asset-client
+    container_name: bbr-asset-client
     build: ./asset_client
     volumes:
       - ./asset_client/public/:/usr/local/apache2/htdocs/
@@ -147,22 +143,9 @@ services:
     depends_on:
       - server
 
-  fish-client:
-    image: supply-fish-client
-    container_name: supply-fish-client
-    build: ./fish_client
-    volumes:
-      - ./fish_client/public/:/usr/local/apache2/htdocs/
-    expose:
-      - 80
-    ports:
-      - '8022:80'
-    depends_on:
-      - server
-
   rethink:
     image: rethinkdb
-    container_name: supply-rethink
+    container_name: bbr-rethink
     expose:
       - 8080
       - 28015
@@ -176,7 +159,7 @@ services:
 
   validator:
     image: hyperledger/sawtooth-validator:1.0
-    container_name: supply-validator
+    container_name: bbr-validator
     expose:
       - 4004
     ports:
@@ -198,14 +181,14 @@ services:
 
   settings-tp:
     image: hyperledger/sawtooth-settings-tp:1.0
-    container_name: supply-settings-tp
+    container_name: bbr-settings-tp
     depends_on:
       - validator
     entrypoint: settings-tp -vv -C tcp://validator:4004
 
   rest-api:
     image: hyperledger/sawtooth-rest-api:1.0
-    container_name: supply-rest-api
+    container_name: bbr-rest-api
     expose:
       - 8008
     ports:

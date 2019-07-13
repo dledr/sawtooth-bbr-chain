@@ -37,14 +37,13 @@ RUN apt-get update && apt-get install -y -q --no-install-recommends \
  && rm -rf /var/lib/apt/lists/* \
  && npm install -g prebuild-install
 
-WORKDIR /sawtooth-supply-chain/server
+WORKDIR /sawtooth-bbr-chain/server
 
 COPY server/package.json .
 RUN npm install
 
 #Copy client sample data for script use
 COPY asset_client/sample_data/ ../asset_client/sample_data/
-COPY fish_client/sample_data/ ../fish_client/sample_data/
 
 COPY protos/ ../protos/
 COPY server/ .

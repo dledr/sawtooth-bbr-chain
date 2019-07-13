@@ -1,5 +1,5 @@
 {
-  "name": "supply_chain_ledger_sync",
+  "name": "bbr_chain_ledger_sync",
   "version": "0.0.0",
   "description": "A simple component to sync blockchain state to a database",
   "main": "index.js",
@@ -13,14 +13,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hyperledger/sawtooth-supply-chain.git"
+    "url": "git+https://github.com/hyperledger/sawtooth-bbr-chain.git"
   },
   "author": "",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/hyperledger/sawtooth-supply-chain/issues"
+    "url": "https://github.com/hyperledger/sawtooth-bbr-chain/issues"
   },
-  "homepage": "https://github.com/hyperledger/sawtooth-supply-chain#readme",
+  "homepage": "https://github.com/hyperledger/sawtooth-bbr-chain#readme",
   "dependencies": {
     "body-parser": "^1.17.2",
     "js-schema": "^1.0.1",

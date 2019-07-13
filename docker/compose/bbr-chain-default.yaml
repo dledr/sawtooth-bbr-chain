@@ -18,15 +18,15 @@ version: '2.1'
 services:
 
   processor:
-    image: hyperledger/sawtooth-supply-chain-tp:0.10
-    container_name: sawtooth-supply-chain-tp
+    image: hyperledger/sawtooth-bbr-chain-tp:0.10
+    container_name: sawtooth-bbr-chain-tp
     depends_on:
       - validator
-    entrypoint: supply-chain-tp -C tcp://validator:4004
+    entrypoint: bbr-chain-tp -C tcp://validator:4004
 
   server:
-    image: hyperledger/sawtooth-supply-chain-server
-    container_name: sawtooth-supply-chain-server
+    image: hyperledger/sawtooth-bbr-chain-server
+    container_name: sawtooth-bbr-chain-server
     expose:
       - 3000
     ports:
@@ -45,8 +45,8 @@ services:
       "
 
   ledger-sync:
-    image: hyperledger/sawtooth-supply-chain-ledger-sync:0.10
-    container_name: sawtooth-supply-chain-ledger-sync
+    image: hyperledger/sawtooth-bbr-chain-ledger-sync:0.10
+    container_name: sawtooth-bbr-chain-ledger-sync
     depends_on:
       - validator
       - rethink
@@ -54,9 +54,9 @@ services:
       - VALIDATOR_URL=tcp://validator:4004
       - DB_HOST=rethink
 
-  fish-client:
-    image: hyperledger/sawtooth-supply-chain-fish-client:0.10
-    container_name: sawtooth-supply-chain-fish-client
+  asset-client:
+    image: hyperledger/sawtooth-bbr-chain-asset-client:0.10
+    container_name: sawtooth-bbr-chain-asset-client
     expose:
       - 80
     ports:
@@ -65,8 +65,8 @@ services:
       - server
 
   shell:
-    image: hyperledger/sawtooth-supply-chain-shell:0.10
-    container_name: sawtoot-supply-chain-shell
+    image: hyperledger/sawtooth-bbr-chain-shell:0.10
+    container_name: sawtoot-bbr-chain-shell
     depends_on:
       - rethink
       - rest-api
@@ -77,29 +77,26 @@ services:
     command: |
       bash -c "
         cd asset_client/ && npm run build && cd - &&
-        cd fish_client/ && npm run build && cd - &&
         if [ ! -f /root/.sawtooth/keys/root.priv ]; then
           sawtooth keygen &&
           cd server/ &&
           npm run init &&
           npm run make-asset &&
-          npm run make-fish &&
           npm run seed-sample-assets &&
-          npm run seed-sample-fish &&
           cd - &&
           tail -f /dev/null
         fi;"
 
   rethink:
     image: rethinkdb
-    container_name: supply-rethink
+    container_name: bbr-rethink
     expose:
       - 8080
       - 28015
 
   validator:
     image: hyperledger/sawtooth-validator:1.1
-    container_name: supply-validator
+    container_name: bbr-validator
     expose:
       - 4004
     # start the validator with an empty genesis batch
@@ -127,14 +124,14 @@ services:
 
   settings-tp:
     image: hyperledger/sawtooth-settings-tp:1.1
-    container_name: supply-settings-tp
+    container_name: bbr-settings-tp
     depends_on:
       - validator
     entrypoint: settings-tp -v -C tcp://validator:4004
 
   rest-api:
     image: hyperledger/sawtooth-rest-api:1.1
-    container_name: supply-rest-api
+    container_name: bbr-rest-api
     expose:
       - 8008
     ports:

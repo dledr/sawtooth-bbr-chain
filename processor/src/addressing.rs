@@ -15,14 +15,14 @@
 use crypto::digest::Digest;
 use crypto::sha2::Sha512;
 
-const FAMILY_NAME: &str = "supply_chain";
+const FAMILY_NAME: &str = "bbr_chain";
 const AGENT: &str = "ae";
 const PROPERTY: &str = "ea";
 const PROPOSAL: &str = "aa";
 const RECORD: &str = "ec";
 const RECORD_TYPE: &str = "ee";
 
-pub fn get_supply_chain_prefix() -> String {
+pub fn get_bbr_chain_prefix() -> String {
     let mut sha = Sha512::new();
     sha.input_str(&FAMILY_NAME);
     sha.result_str()[..6].to_string()
@@ -40,15 +40,15 @@ pub fn hash(to_hash: &str, num: usize) -> String {
 }
 
 pub fn make_agent_address(identifier: &str) -> String {
-    get_supply_chain_prefix() + &AGENT + &hash(identifier, 62)
+    get_bbr_chain_prefix() + &AGENT + &hash(identifier, 62)
 }
 
 pub fn make_record_address(record_id: &str) -> String {
-    get_supply_chain_prefix() + &RECORD + &hash(record_id, 62)
+    get_bbr_chain_prefix() + &RECORD + &hash(record_id, 62)
 }
 
 pub fn make_record_type_address(type_name: &str) -> String {
-    get_supply_chain_prefix() + &RECORD_TYPE + &hash(type_name, 62)
+    get_bbr_chain_prefix() + &RECORD_TYPE + &hash(type_name, 62)
 }
 
 pub fn make_property_address(record_id: &str, property_name: &str, page: u32) -> String {
@@ -56,7 +56,7 @@ pub fn make_property_address(record_id: &str, property_name: &str, page: u32) ->
 }
 
 pub fn make_property_address_range(record_id: &str) -> String {
-    get_supply_chain_prefix() + &PROPERTY + &hash(record_id, 36)
+    get_bbr_chain_prefix() + &PROPERTY + &hash(record_id, 36)
 }
 
 pub fn num_to_page_number(page: u32) -> String {
@@ -64,5 +64,5 @@ pub fn num_to_page_number(page: u32) -> String {
 }
 
 pub fn make_proposal_address(record_id: &str, agent_id: &str) -> String {
-    get_supply_chain_prefix() + PROPOSAL + &hash(record_id, 36) + &hash(agent_id, 26)
+    get_bbr_chain_prefix() + PROPOSAL + &hash(record_id, 36) + &hash(agent_id, 26)
 }

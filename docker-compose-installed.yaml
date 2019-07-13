@@ -18,8 +18,8 @@ version: '2.1'
 services:
 
   processor:
-    image: supply-tp-installed:${ISOLATION_ID}
-    container_name: supply-tp-installed
+    image: bbr-tp-installed:${ISOLATION_ID}
+    container_name: bbr-tp-installed
     build:
       context: .
       dockerfile: processor/Dockerfile-installed-${DISTRO}
@@ -29,11 +29,11 @@ services:
         - no_proxy
     depends_on:
       - validator
-    entrypoint: supply-chain-tp -C tcp://validator:4004
+    entrypoint: bbr-chain-tp -C tcp://validator:4004
 
   server:
-    image: supply-server-installed:${ISOLATION_ID}
-    container_name: supply-server-installed
+    image: bbr-server-installed:${ISOLATION_ID}
+    container_name: bbr-server-installed
     build:
       context: .
       dockerfile: server/Dockerfile-installed-${DISTRO}
@@ -59,8 +59,8 @@ services:
       "
 
   ledger-sync:
-    image: supply-ledger-sync-installed:${ISOLATION_ID}
-    container_name: supply-ledger-sync-installed
+    image: bbr-ledger-sync-installed:${ISOLATION_ID}
+    container_name: bbr-ledger-sync-installed
     build:
       context: .
       dockerfile: ledger_sync/Dockerfile-installed-${DISTRO}
@@ -72,8 +72,8 @@ services:
       - DB_HOST=rethink
 
   asset-client:
-    image: supply-asset-client-installed:${ISOLATION_ID}
-    container_name: supply-asset-client-installed
+    image: bbr-asset-client-installed:${ISOLATION_ID}
+    container_name: bbr-asset-client-installed
     build:
       context: .
       dockerfile: asset_client/Dockerfile-installed
@@ -84,29 +84,16 @@ services:
     depends_on:
       - server
 
-  fish-client:
-    image: supply-fish-client-installed:${ISOLATION_ID}
-    container_name: supply-fish-client-installed
-    build:
-      context: .
-      dockerfile: fish_client/Dockerfile-installed
-    expose:
-      - 80
-    ports:
-      - '8022:80'
-    depends_on:
-      - server
-
   rethink:
     image: rethinkdb
-    container_name: supply-rethink
+    container_name: bbr-rethink
     expose:
       - 8080
       - 28015
 
   validator:
     image: hyperledger/sawtooth-validator:1.0
-    container_name: supply-validator
+    container_name: bbr-validator
     expose:
       - 4004
     # start the validator with an empty genesis batch
@@ -126,7 +113,7 @@ services:
 
   settings-tp:
     image: hyperledger/sawtooth-settings-tp:1.0
-    container_name: supply-settings-tp
+    container_name: bbr-settings-tp
     depends_on:
       - validator
     entrypoint: settings-tp -v -C tcp://validator:4004
