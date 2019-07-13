@@ -29,6 +29,6 @@ ProxyPassReverse /api http://server:3000\n\
 \n\
 " >>/usr/local/apache2/conf/httpd.conf
 
-ENV PATH $PATH:/sawtooth-supply-chain/bin
+ENV PATH $PATH:/sawtooth-bbr-chain/bin
 
 EXPOSE 80/tcp

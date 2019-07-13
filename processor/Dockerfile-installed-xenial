@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# docker build -f processor/Dockerfile-installed -t supply-chain-tp .
+# docker build -f processor/Dockerfile-installed -t bbr-chain-tp .
 
-# -------------=== supply-chain tp build ===-------------
-FROM ubuntu:xenial as supply-chain-tp-builder
+# -------------=== bbr-chain tp build ===-------------
+FROM ubuntu:xenial as bbr-chain-tp-builder
 
 ENV VERSION=AUTO_STRICT
 
@@ -43,13 +43,13 @@ WORKDIR /project/processor
 
 RUN /root/.cargo/bin/cargo deb
 
-# -------------=== supply-chain-tp docker build ===-------------
+# -------------=== bbr-chain-tp docker build ===-------------
 FROM ubuntu:xenial
 
-COPY --from=supply-chain-tp-builder /project/processor/target/debian/supply-chain-tp*.deb /tmp
+COPY --from=bbr-chain-tp-builder /project/processor/target/debian/bbr-chain-tp*.deb /tmp
 
 RUN apt-get update \
- && dpkg -i /tmp/supply-chain-tp*.deb || true \
+ && dpkg -i /tmp/bbr-chain-tp*.deb || true \
  && apt-get -f -y install
 
-CMD ["supply-chain-tp", "-vv"]
+CMD ["bbr-chain-tp", "-vv"]

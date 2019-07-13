@@ -21,16 +21,16 @@ import unittest
 from sawtooth_integration.tests.integration_tools import RestClient
 from sawtooth_integration.tests.integration_tools import wait_for_rest_apis
 
-from sawtooth_sc_test.supply_chain_message_factory import \
-    SupplyChainMessageFactory
-from sawtooth_sc_test.supply_chain_message_factory import Enum
+from sawtooth_bc_test.bbr_chain_message_factory import \
+    BbrChainMessageFactory
+from sawtooth_bc_test.bbr_chain_message_factory import Enum
 from sawtooth_signing import create_context
 from sawtooth_signing import CryptoFactory
 
-import sawtooth_sc_test.addressing as addressing
-from sawtooth_sc_test.protobuf.property_pb2 import PropertySchema
-from sawtooth_sc_test.protobuf.proposal_pb2 import Proposal
-from sawtooth_sc_test.protobuf.payload_pb2 import AnswerProposalAction
+import sawtooth_bc_test.addressing as addressing
+from sawtooth_bc_test.protobuf.property_pb2 import PropertySchema
+from sawtooth_bc_test.protobuf.proposal_pb2 import Proposal
+from sawtooth_bc_test.protobuf.payload_pb2 import AnswerProposalAction
 
 
 LOGGER = logging.getLogger(__name__)
@@ -42,16 +42,16 @@ NARRATION = False
 REST_API = 'rest-api:8008'
 URL = 'http://' + REST_API
 
-SERVER_URL = 'http://supply-server:3000'
+SERVER_URL = 'http://bbr-server:3000'
 API = SERVER_URL
 
 
-class SupplyChainClient(RestClient):
+class BbrChainClient(RestClient):
     def __init__(self, url=URL):
         context = create_context('secp256k1')
         private_key = context.new_random_private_key()
         signer = CryptoFactory(context).new_signer(private_key)
-        self.factory = SupplyChainMessageFactory(signer=signer)
+        self.factory = BbrChainMessageFactory(signer=signer)
         self.public_key = self.factory.public_key
         self.private_key = "encryptedKey"
         self.auth_token = None
@@ -60,33 +60,33 @@ class SupplyChainClient(RestClient):
             url=url,
             namespace=addressing.NAMESPACE)
 
-    def _post_sc_transaction(self, transaction):
+    def _post_bc_transaction(self, transaction):
         return self.send_batches(
             self.factory.create_batch(
                 transaction))
 #
     def create_agent(self, name):
-        return self._post_sc_transaction(
+        return self._post_bc_transaction(
             self.factory.create_agent(
                 name))
 
     def create_record_type(self, name, *properties):
-        return self._post_sc_transaction(
+        return self._post_bc_transaction(
             self.factory.create_record_type(
                 name, *properties))
 
     def create_record(self, record_id, record_type, properties_dict):
-        return self._post_sc_transaction(
+        return self._post_bc_transaction(
             self.factory.create_record(
                 record_id, record_type, properties_dict))
 
     def finalize_record(self, record_id):
-        return self._post_sc_transaction(
+        return self._post_bc_transaction(
             self.factory.finalize_record(
                 record_id))
 
     def update_properties(self, record_id, properties_dict):
-        return self._post_sc_transaction(
+        return self._post_bc_transaction(
             self.factory.update_properties(
                 record_id, properties_dict))
 
@@ -95,7 +95,7 @@ class SupplyChainClient(RestClient):
         if properties is None:
             properties = []
 
-        return self._post_sc_transaction(
+        return self._post_bc_transaction(
             self.factory.create_proposal(
                 record_id, receiving_agent, role, properties))
 
@@ -103,7 +103,7 @@ class SupplyChainClient(RestClient):
         if receiving_agent is None:
             receiving_agent = self.public_key
 
-        return self._post_sc_transaction(
+        return self._post_bc_transaction(
             self.factory.answer_proposal(
                 record_id=record_id,
                 receiving_agent=receiving_agent,
@@ -111,12 +111,12 @@ class SupplyChainClient(RestClient):
                 response=response))
 
     def revoke_reporter(self, record_id, reporter_id, properties):
-        return self._post_sc_transaction(
+        return self._post_bc_transaction(
             self.factory.revoke_reporter(
                 record_id, reporter_id, properties))
 
     def send_empty_payload(self):
-        return self._post_sc_transaction(
+        return self._post_bc_transaction(
             self.factory.make_empty_payload(
                 self.public_key))
 
@@ -181,7 +181,7 @@ class SupplyChainClient(RestClient):
             self.auth_token = response[1]['authorization']
 
 
-class TestSupplyChain(unittest.TestCase):
+class TestBbrChain(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         wait_for_rest_apis([REST_API])
@@ -212,7 +212,7 @@ class TestSupplyChain(unittest.TestCase):
                     *interpolations))
 
     def test_track_and_trade(self):
-        jin = SupplyChainClient()
+        jin = BbrChainClient()
 
         self.assert_invalid(
             jin.send_empty_payload())
@@ -481,7 +481,7 @@ class TestSupplyChain(unittest.TestCase):
             get an autonomous IoT sensor to do it for him.
             ''')
 
-        sensor_stark = SupplyChainClient()
+        sensor_stark = BbrChainClient()
 
         self.assert_invalid(
             sensor_stark.update_properties(
@@ -566,7 +566,7 @@ class TestSupplyChain(unittest.TestCase):
             (with payment made off-chain).
             ''')
 
-        sun = SupplyChainClient()
+        sun = BbrChainClient()
 
         self.assert_invalid(
             jin.create_proposal(
@@ -663,7 +663,7 @@ class TestSupplyChain(unittest.TestCase):
             sensor and authorize her own sensor.
             ''')
 
-        sensor_dollars = SupplyChainClient()
+        sensor_dollars = BbrChainClient()
 
         self.assert_valid(
             sensor_dollars.create_agent(

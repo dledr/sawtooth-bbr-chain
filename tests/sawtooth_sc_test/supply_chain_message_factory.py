@@ -19,22 +19,22 @@ import time
 
 from sawtooth_processor_test.message_factory import MessageFactory
 
-from sawtooth_sc_test.protobuf.payload_pb2 import SCPayload
-from sawtooth_sc_test.protobuf.payload_pb2 import CreateAgentAction
-from sawtooth_sc_test.protobuf.payload_pb2 import CreateProposalAction
-from sawtooth_sc_test.protobuf.payload_pb2 import AnswerProposalAction
-from sawtooth_sc_test.protobuf.payload_pb2 import CreateRecordAction
-from sawtooth_sc_test.protobuf.payload_pb2 import \
+from sawtooth_bc_test.protobuf.payload_pb2 import SCPayload
+from sawtooth_bc_test.protobuf.payload_pb2 import CreateAgentAction
+from sawtooth_bc_test.protobuf.payload_pb2 import CreateProposalAction
+from sawtooth_bc_test.protobuf.payload_pb2 import AnswerProposalAction
+from sawtooth_bc_test.protobuf.payload_pb2 import CreateRecordAction
+from sawtooth_bc_test.protobuf.payload_pb2 import \
     CreateRecordTypeAction
-from sawtooth_sc_test.protobuf.payload_pb2 import FinalizeRecordAction
-from sawtooth_sc_test.protobuf.payload_pb2 import \
+from sawtooth_bc_test.protobuf.payload_pb2 import FinalizeRecordAction
+from sawtooth_bc_test.protobuf.payload_pb2 import \
     UpdatePropertiesAction
-from sawtooth_sc_test.protobuf.payload_pb2 import RevokeReporterAction
+from sawtooth_bc_test.protobuf.payload_pb2 import RevokeReporterAction
 
-from sawtooth_sc_test.protobuf.property_pb2 import PropertySchema
-from sawtooth_sc_test.protobuf.property_pb2 import PropertyValue
+from sawtooth_bc_test.protobuf.property_pb2 import PropertySchema
+from sawtooth_bc_test.protobuf.property_pb2 import PropertyValue
 
-import sawtooth_sc_test.addressing as addressing
+import sawtooth_bc_test.addressing as addressing
 
 
 LOGGER = logging.getLogger(__name__)
@@ -47,7 +47,7 @@ class Enum(object):
         self.value = name
 
 
-class SupplyChainMessageFactory:
+class BbrChainMessageFactory:
     def __init__(self, signer=None):
         self._factory = MessageFactory(
             family_name=addressing.FAMILY_NAME,
@@ -59,7 +59,7 @@ class SupplyChainMessageFactory:
         self.signer_address = addressing.make_agent_address(self.public_key)
 
     def create_agent(self, name):
-        payload = _make_sc_payload(
+        payload = _make_bc_payload(
             action=SCPayload.CREATE_AGENT,
             create_agent=CreateAgentAction(name=name))
 
@@ -77,7 +77,7 @@ class SupplyChainMessageFactory:
                      for n, dt, a in attrs['struct_properties']]
             return PropertySchema(name=name, data_type=data_type, **attrs)
 
-        payload = _make_sc_payload(
+        payload = _make_bc_payload(
             action=SCPayload.CREATE_RECORD_TYPE,
             create_record_type=CreateRecordTypeAction(
                 name=name,
@@ -94,7 +94,7 @@ class SupplyChainMessageFactory:
         )
 
     def create_record(self, record_id, record_type, properties_dict):
-        payload = _make_sc_payload(
+        payload = _make_bc_payload(
             action=SCPayload.CREATE_RECORD,
             create_record=CreateRecordAction(
                 record_id=record_id,
@@ -128,7 +128,7 @@ class SupplyChainMessageFactory:
         )
 
     def finalize_record(self, record_id):
-        payload = _make_sc_payload(
+        payload = _make_bc_payload(
             action=SCPayload.FINALIZE_RECORD,
             finalize_record=FinalizeRecordAction(
                 record_id=record_id))
@@ -142,7 +142,7 @@ class SupplyChainMessageFactory:
         )
 
     def update_properties(self, record_id, properties_dict):
-        payload = _make_sc_payload(
+        payload = _make_bc_payload(
             action=SCPayload.UPDATE_PROPERTIES,
             update_properties=UpdatePropertiesAction(
                 record_id=record_id,
@@ -173,7 +173,7 @@ class SupplyChainMessageFactory:
         if properties is None:
             properties = []
 
-        payload = _make_sc_payload(
+        payload = _make_bc_payload(
             action=SCPayload.CREATE_PROPOSAL,
             create_proposal=CreateProposalAction(
                 record_id=record_id,
@@ -201,7 +201,7 @@ class SupplyChainMessageFactory:
         )
 
     def answer_proposal(self, record_id, receiving_agent, role, response):
-        payload = _make_sc_payload(
+        payload = _make_bc_payload(
             action=SCPayload.ANSWER_PROPOSAL,
             answer_proposal=AnswerProposalAction(
                 record_id=record_id,
@@ -234,7 +234,7 @@ class SupplyChainMessageFactory:
         )
 
     def revoke_reporter(self, record_id, reporter_id, properties):
-        payload = _make_sc_payload(
+        payload = _make_bc_payload(
             action=SCPayload.REVOKE_REPORTER,
             revoke_reporter=RevokeReporterAction(
                 record_id=record_id,
@@ -282,7 +282,7 @@ class SupplyChainMessageFactory:
         return self._factory.create_batch([transaction])
 
 
-def _make_sc_payload(**kwargs):
+def _make_bc_payload(**kwargs):
     return SCPayload(
         timestamp=round(time.time()),
         **kwargs

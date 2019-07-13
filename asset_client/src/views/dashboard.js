@@ -27,11 +27,11 @@ const Dashboard = {
         m('h5',
           m('em',
             'Powered by ',
-            m('strong', 'Sawtooth Supply Chain')))),
+            m('strong', 'Sawtooth BBR Chain')))),
       m('.blurb',
         m('p',
-          m('em', 'Sawtooth Supply Chain'),
-          ' is a general purpose supply chain solution built using the ',
+          m('em', 'Sawtooth BBR Chain'),
+          ' is a general purpose bbr chain solution built using the ',
           'power of ',
           m('a[href="https://github.com/hyperledger/sawtooth-core"]',
             { target: '_blank' },
@@ -58,7 +58,7 @@ const Dashboard = {
           'ownership or possession of the asset entirely. For the ',
           'adventurous, these actions can also be accomplished directly ',
           'with the REST API running on the ',
-          m('em', 'Supply Chain'),
+          m('em', 'BBR Chain'),
           ' server, perfect for automated IoT sensors.'))
     ]
   }
