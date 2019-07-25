@@ -1,5 +1,5 @@
 # Exclude IDE and Editor files
-/.idea/
+**/.idea/
 *.sublime*
 
 # Rust
