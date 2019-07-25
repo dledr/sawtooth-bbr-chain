@@ -1550,6 +1550,9 @@ impl BbrChainTransactionHandler {
             property::PropertySchema_DataType::LOCATION => {
                 reported_value.set_location_value(value.get_location_value().clone())
             }
+            property::PropertySchema_DataType::CHECKPOINT => {
+                reported_value.set_checkpoint_value(value.get_checkpoint_value().clone())
+            }
         };
         Ok(reported_value)
     }
