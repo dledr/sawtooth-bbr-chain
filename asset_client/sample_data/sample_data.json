@@ -1,114 +1,37 @@
 {
   "records": [
     {
-      "recordId": "7h15-45537-15-br173",
-      "recordType": "asset",
+      "recordId": "c62c58c10f441a604a193c29e0530c114edf7e3d9f967b0c231d110d50be56c6",
+      "recordType": "bbr",
       "properties": [
           {
-            "name": "type",
+            "name": "topic_name",
             "dataType": 4,
-            "stringValue": "Lightbulb"
+            "stringValue": "/chatter"
           },
           {
-            "name": "subtype",
+            "name": "message_type",
             "dataType": 4,
-            "stringValue": "LED"
+            "stringValue": "std_msgs/msg/String"
           },
           {
-            "name": "weight",
-            "dataType": 3,
-            "numberValue": 134089
+            "name": "serialization_format",
+            "dataType": 4,
+            "stringValue": "cdr"
           },
           {
-            "name": "location",
+            "name": "checkpoint",
             "dataType": 7,
-            "locationValue": {
-              "latitude": 33928564,
-              "longitude": 134615935
+            "checkpointValue": {
+              "stamp": 0,
+              "hash": "c62c58c10f441a604a193c29e0530c114edf7e3d9f967b0c231d110d50be56c6"
             }
-          },
-          {
-            "name": "temperature",
-            "dataType": 3,
-            "numberValue": 44857012
           }
       ],
       "ownerIndex": 0,
       "custodianIndex": 1,
       "reporterIndex": 2,
-      "reportableProperties": ["temperature", "location", "weight", "shock"]
-    },
-
-    {
-      "recordId": "7h15-45537-f1135",
-      "recordType": "asset",
-      "properties": [
-          {
-            "name": "type",
-            "dataType": 4,
-            "stringValue": "Airliner"
-          },
-          {
-            "name": "subtype",
-            "dataType": 4,
-            "stringValue": "Boeing 747"
-          },
-          {
-            "name": "weight",
-            "dataType": 3,
-            "numberValue": 174540000000
-          },
-          {
-            "name": "location",
-            "dataType": 7,
-            "locationValue": {
-              "latitude": 47499875,
-              "longitude": -122208106
-            }
-          },
-          {
-            "name": "temperature",
-            "dataType": 3,
-            "numberValue": -35014970
-          }
-      ],
-      "ownerIndex": 1
-    },
-
-    {
-      "recordId": "7h15-45537-15-b357",
-      "recordType": "asset",
-      "properties": [
-          {
-            "name": "type",
-            "dataType": 4,
-            "stringValue": "Coffee"
-          },
-          {
-            "name": "subtype",
-            "dataType": 4,
-            "stringValue": "Kona"
-          },
-          {
-            "name": "weight",
-            "dataType": 3,
-            "numberValue": 10000000
-          },
-          {
-            "name": "location",
-            "dataType": 7,
-            "locationValue": {
-              "latitude": 19703448,
-              "longitude": -155944975
-            }
-          },
-          {
-            "name": "temperature",
-            "dataType": 3,
-            "numberValue": 21829043
-          }
-      ],
-      "ownerIndex": 1
+      "reportableProperties": ["checkpoint"]
     }
   ],
 
