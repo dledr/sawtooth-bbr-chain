@@ -16,8 +16,7 @@
 FROM hyperledger/sawtooth-shell:nightly
 
 # Install Python, Node.js, and Ubuntu dependencies
-RUN echo "deb http://repo.sawtooth.me/ubuntu/1.0/stable bionic universe" >> /etc/apt/sources.list \
-  && (apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 44FC67F19B2466EA \
+RUN (apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 44FC67F19B2466EA \
   || apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 44FC67F19B2466EA) \
   && apt-get update \
   && apt-get install -y -q \
@@ -38,7 +37,6 @@ RUN echo "deb http://repo.sawtooth.me/ubuntu/1.0/stable bionic universe" >> /etc
     python3-pytest-runner \
     python3-pytest \
     python3-sawtooth-sdk \
-    python3-sawtooth-signing \
     python3-setuptools-scm \
     python3-yaml \
     software-properties-common \
